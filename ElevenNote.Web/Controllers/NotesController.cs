@@ -20,5 +20,28 @@ namespace ElevenNote.Web.Controllers
 
             return View(notes);
         }
+
+        [HttpGet]
+        [ActionName("Create")]
+        public ActionResult CreateGet()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        [ActionName("Create")]
+    
+        public ActionResult CreatePost(NoteEditViewModel model)
+        {
+            if (ModelState.IsValid)
+            { 
+                //TODO: Save to the database
+                //HACK: This is a test
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
     }
 }
