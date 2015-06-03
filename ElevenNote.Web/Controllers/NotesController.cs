@@ -19,7 +19,7 @@ namespace ElevenNote.Web.Controllers
         /// <summary>
         /// Instance of our Notes Service
         /// </summary>
-        NoteService _service = new NoteService();
+        readonly NoteService _service = new NoteService();
 
         /// <summary>
         /// Currently logged in user --> get their ID
@@ -69,6 +69,35 @@ namespace ElevenNote.Web.Controllers
             if (note == null) return HttpNotFound(); //Returns "404" error.
 
             return View(note);
+        }
+
+        [HttpGet]
+        [ActionName("Edit")]
+        public ActionResult EditGet(int id)
+        {
+            //Attempt to get the note we're editing
+            var note = _service.GetById(id, this.CurrentUserId);
+
+            //Make sure we got a note back
+            if (note == null) return HttpNotFound(); //Returns "404" error.
+
+            //If all looks good, pass the note to the view
+            return View(note);
+        }
+
+        [HttpPost]
+        [ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult EditPost(NoteEditViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                _service.Update(model, this.CurrentUserId);
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
         }
     }
 }
