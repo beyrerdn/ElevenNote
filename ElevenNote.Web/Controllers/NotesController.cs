@@ -4,21 +4,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using ElevenNote.Services;
+
 
 namespace ElevenNote.Web.Controllers
 {
+    [Authorize]
     public class NotesController : Controller
     {
-        [Authorize]
         // GET: Notes
         public ActionResult Index()
         {
-            var notes = new List<NoteListViewModel>();
-            notes.Add(new NoteListViewModel() {DateCreated = DateTime.Now, Name = "Some Title", Id = 1});
-            notes.Add(new NoteListViewModel() { DateCreated = DateTime.Now, Name = "Some Title 2", Id = 2 });
-            notes.Add(new NoteListViewModel() { DateCreated = DateTime.Now, Name = "Some Title 3", Id = 3 });
+            //Currently logged in user --> get their ID
+            var userId = new Guid(User.Identity.GetUserId()); //we can call this "GetUserId()" thanks to "using Microsoft.AspNet.Identity
 
-            return View(notes);
+            var service = new NoteService();
+
+            return View(service.GetAllForUser(userId));
         }
 
         [HttpGet]
@@ -36,9 +40,10 @@ namespace ElevenNote.Web.Controllers
         public ActionResult CreatePost(NoteEditViewModel model)
         {
             if (ModelState.IsValid)
-            { 
-                //TODO: Save to the database
-                //HACK: This is a test
+            {
+                var userId = new Guid(User.Identity.GetUserId());
+                var service = new NoteService();
+                service.Create(model, userId);
                 return RedirectToAction("Index");
             }
             return View(model);

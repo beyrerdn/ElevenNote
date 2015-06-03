@@ -3,6 +3,12 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+@if (Model == null || Model.Count() == 0)
+{
+    <p>You don't have any notes. Why don't you add one?</p>
+}
+else
+{ 
 <table class="table">
     <tr>
         <th>
@@ -37,3 +43,4 @@
 }
 
 </table>
+}
