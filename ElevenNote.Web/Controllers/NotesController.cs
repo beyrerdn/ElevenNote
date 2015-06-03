@@ -13,16 +13,30 @@ namespace ElevenNote.Web.Controllers
 {
     [Authorize]
     public class NotesController : Controller
-    {
+    {   
+        //Properties
+
+        /// <summary>
+        /// Instance of our Notes Service
+        /// </summary>
+        NoteService _service = new NoteService();
+
+        /// <summary>
+        /// Currently logged in user --> get their ID
+        /// </summary>
+        Guid CurrentUserId
+        {
+            get
+            {
+                return new Guid(User.Identity.GetUserId());
+            }
+        }
         // GET: Notes
+
         public ActionResult Index()
         {
-            //Currently logged in user --> get their ID
-            var userId = new Guid(User.Identity.GetUserId()); //we can call this "GetUserId()" thanks to "using Microsoft.AspNet.Identity
-
-            var service = new NoteService();
-
-            return View(service.GetAllForUser(userId));
+            
+            return View(_service.GetAllForUser(this.CurrentUserId));
         }
 
         [HttpGet]
@@ -41,12 +55,20 @@ namespace ElevenNote.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userId = new Guid(User.Identity.GetUserId());
-                var service = new NoteService();
-                service.Create(model, userId);
+                
+                _service.Create(model, this.CurrentUserId);
                 return RedirectToAction("Index");
             }
             return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult Details(int id)
+        {
+            var note = _service.GetById(id, this.CurrentUserId);
+            if (note == null) return HttpNotFound(); //Returns "404" error.
+
+            return View(note);
         }
     }
 }
