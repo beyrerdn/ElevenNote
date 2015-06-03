@@ -166,7 +166,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -583,6 +582,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ElevenNote.DataAccess\ElevenNote.DataAccess.csproj">
+      <Project>{d5469ba5-9d7a-4256-86c0-14a055f35582}</Project>
+      <Name>ElevenNote.DataAccess</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ElevenNote.Models\ElevenNote.Models.csproj">
       <Project>{4faa7290-6fbf-41ea-996e-8720478577dc}</Project>
       <Name>ElevenNote.Models</Name>
