@@ -166,5 +166,30 @@ namespace ElevenNote.Web.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        [ActionName("Toggle")]
+        public ActionResult Toggle(int id = -1) //if id isn't provided (user trying to get to ~/Notes/Edit), id will be set to -1
+        {
+            if (id == -1)
+            {
+                TempData.Add("ErrorMessage", "You did not specify a note.");
+                return RedirectToAction("Index");
+            }
+
+            //Attempt to get the note we're editing
+            var note = _service.GetById(id, this.CurrentUserId);
+
+            //Make sure we got a note back
+            if (note == null)
+            {
+                TempData.Add("ErrorMessage", "That note couldn't be found.");
+                return RedirectToAction("Index");
+            }
+
+            //If all looks good, toggle the IsFavorite
+            _service.ToggleFavorite(id, this.CurrentUserId);
+            return RedirectToAction("Index");
+        }
     }
 }

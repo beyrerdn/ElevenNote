@@ -60,6 +60,10 @@
     <Compile Include="Migrations\201506030001150_InitialMigration.Designer.cs">
       <DependentUpon>201506030001150_InitialMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506042030106_AddedIsFavoriteColumn.cs" />
+    <Compile Include="Migrations\201506042030106_AddedIsFavoriteColumn.Designer.cs">
+      <DependentUpon>201506042030106_AddedIsFavoriteColumn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -76,6 +80,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201506030001150_InitialMigration.resx">
       <DependentUpon>201506030001150_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506042030106_AddedIsFavoriteColumn.resx">
+      <DependentUpon>201506042030106_AddedIsFavoriteColumn.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
