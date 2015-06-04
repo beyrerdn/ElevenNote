@@ -99,5 +99,33 @@ namespace ElevenNote.Web.Controllers
 
             return View(model);
         }
+
+        [HttpGet]
+        [ActionName("Delete")]
+        public ActionResult DeleteGet(int id)
+        {
+            //Attempt to get the note we're editing
+            var note = _service.GetById(id, this.CurrentUserId);
+
+            //Make sure we got a note back
+            if (note == null) return HttpNotFound(); //Returns "404" error.
+
+            //If all looks good, pass the note to the view
+            return View(note);
+        }
+
+        [HttpPost]
+        [ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public ActionResult DeletePost(int id)
+        {
+            if (ModelState.IsValid)
+            {
+                _service.Delete(id, this.CurrentUserId);
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }
