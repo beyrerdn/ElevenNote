@@ -33,10 +33,27 @@ namespace ElevenNote.Web.Controllers
         }
         // GET: Notes
 
-        public ActionResult Index()
+        public ActionResult Index(string sort = "") //redefined to allow the the binding engine to define sort through the QueryString
         {
-            
-            return View(_service.GetAllForUser(this.CurrentUserId));
+            var notes = _service.GetAllForUser(this.CurrentUserId);
+            //var sort = Request.QueryString["sort"] ?? ""; //via QueryString
+
+            switch (sort)
+            {
+                case "name" :
+                    notes = notes.OrderBy(o => o.Name).ToList();
+                    break;
+                case "modified" :
+                    notes = notes.OrderBy(o => o.DateModified).ToList();
+                    break;
+                case "created" :
+                    notes = notes.OrderBy(o => o.DateCreated).ToList();
+                    break;
+                default:
+                    notes = notes.OrderBy(o => o.DateCreated).ToList();
+                    break;
+            }
+            return View(notes);
         }
 
         [HttpGet]
@@ -63,23 +80,45 @@ namespace ElevenNote.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult Details(int id)
+        public ActionResult Details(int id = -1) //if id isn't provided (user trying to get to ~/Notes/Details), id will be set to -1
         {
+            if (id == -1)
+            {
+                TempData.Add("ErrorMessage", "You did not specify a note.");
+                return RedirectToAction("Index");
+            }
+
             var note = _service.GetById(id, this.CurrentUserId);
-            if (note == null) return HttpNotFound(); //Returns "404" error.
+
+            //Make sure note is not null
+            if (note == null)
+            {
+                TempData.Add("ErrorMessage", "That note couldn't be found.");
+                return RedirectToAction("Index");
+            }
 
             return View(note);
         }
 
         [HttpGet]
         [ActionName("Edit")]
-        public ActionResult EditGet(int id)
+        public ActionResult EditGet(int id = -1) //if id isn't provided (user trying to get to ~/Notes/Edit), id will be set to -1
         {
+            if (id == -1)
+            {
+                TempData.Add("ErrorMessage", "You did not specify a note.");
+                return RedirectToAction("Index");
+            }
+
             //Attempt to get the note we're editing
             var note = _service.GetById(id, this.CurrentUserId);
 
             //Make sure we got a note back
-            if (note == null) return HttpNotFound(); //Returns "404" error.
+            if (note == null) //return HttpNotFound(); //Returns "404" error.
+            {
+                TempData.Add("ErrorMessage", "That note couldn't be found.");
+                return RedirectToAction("Index");
+            }
 
             //If all looks good, pass the note to the view
             return View(note);

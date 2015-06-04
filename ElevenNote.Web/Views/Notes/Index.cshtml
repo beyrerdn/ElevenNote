@@ -1,8 +1,14 @@
 ﻿@model IEnumerable<ElevenNote.Models.ViewModels.NoteListViewModel>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    <br />@Html.ActionLink("Create New", "Create")
 </p>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <p style="color:red"><strong>Error:</strong>@TempData["ErrorMessage"]</p>
+}
+
 @if (Model == null || Model.Count() == 0)
 {
     <p>You don't have any notes. Why don't you add one?</p>
@@ -12,13 +18,13 @@ else
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            <a href="/Notes?sort=name">@Html.DisplayNameFor(model => model.Name)</a>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DateCreated)
+            <a href="/Notes?sort=created">@Html.DisplayNameFor(model => model.DateCreated)</a>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DateModified)
+            <a href="/Notes?sort=modified">@Html.DisplayNameFor(model => model.DateModified)</a>
         </th>
         <th></th>
     </tr>
